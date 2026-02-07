@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import url("https://fonts.cdnfonts.com/css/general-sans");
 
+/* =========================================================
+   GLOBAL BASE
+   ========================================================= */
 body {
   width: 100dvw;
   overflow-x: hidden;
@@ -8,6 +11,9 @@ body {
   font-family: "General Sans", sans-serif;
 }
 
+/* =========================================================
+   BASE LAYER
+   ========================================================= */
 @layer base {
   @font-face {
     font-family: "CircularWeb";
@@ -35,96 +41,17 @@ body {
   }
 }
 
+/* =========================================================
+   UTILITIES (HTML-ONLY, NO @apply REUSE)
+   ========================================================= */
 @layer utilities {
-  .border-hsla {
-    @apply border border-white/20;
-  }
-
-  .nav-hover-btn {
-    @apply relative ms-10 font-general text-xs uppercase text-blue-50 after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-neutral-800 after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom-left hover:after:scale-x-100 dark:after:bg-white cursor-pointer;
-  }
-
-  .floating-nav {
-    @apply bg-black rounded-lg border;
-  }
-
-  .absolute-center {
-    @apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%];
-  }
-
-  .flex-center {
-    @apply flex justify-center items-center;
+  .special-font {
+    font-family: "Zentry", sans-serif;
+    font-feature-settings: "ss01" on;
   }
 
   .mask-clip-path {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-
-  .special-font b {
-    font-family: "Zentry";
-    font-feature-settings: "ss01" on;
-  }
-
-  .hero-heading {
-    @apply uppercase font-zentry font-black text-5xl sm:right-10 sm:text-7xl md:text-9xl lg:text-[12rem];
-  }
-
-  .about-subtext {
-    @apply absolute bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular-web text-lg md:max-w-[34rem];
-  }
-
-  .about-image {
-    @apply absolute left-1/2 top-0 z-20 h-[60vh] w-96 origin-center -translate-x-1/2 overflow-hidden rounded-3xl md:w-[30vw];
-  }
-
-  .animated-title {
-    @apply flex flex-col gap-1 text-7xl uppercase leading-[.8] text-white sm:px-32 md:text-[6rem];
-  }
-
-  .animated-word {
-    @apply special-font font-zentry font-black opacity-0;
-    transform: translate3d(10px, 51px, -60px) rotateY(60deg) rotateX(-40deg);
-    transform-origin: 50% 50% -150px !important;
-    will-change: opacity, transform;
-  }
-
-  .bento-tilt_1 {
-    @apply relative border-hsla col-span-2 overflow-hidden rounded-md transition-transform duration-300 ease-out;
-  }
-
-  .bento-tilt_2 {
-    @apply relative col-span-1 row-span-1 overflow-hidden rounded-md transition-transform duration-300 ease-out;
-  }
-
-  .bento-title {
-    @apply uppercase md:text-6xl text-4xl font-black font-zentry;
-  }
-
-  .story-img-container {
-    @apply relative md:h-dvh h-[90vh] w-full;
-    filter: url("#flt_tag");
-  }
-
-  .story-img-mask {
-    @apply absolute left-0 top-0 size-full overflow-hidden md:left-[20%] md:top-[-10%] md:size-4/5;
-    clip-path: polygon(4% 0, 83% 21%, 100% 73%, 0% 100%);
-  }
-
-  .story-img-content {
-    @apply absolute w-full md:h-dvh h-[50dvh] opacity-100 left-10 top-16 md:left-0 md:top-10 lg:left-[-300px] lg:top-[-100px];
-    transform: translate3d(0, 0, 0) rotateX(0) rotateY(0) rotateZ(0) scale(1);
-  }
-
-  .gallery-img-container {
-    @apply size-64 overflow-hidden bg-violet-300;
-  }
-
-  .gallery-img {
-    @apply size-full bg-cover;
-  }
-
-  .gallery-img-4 {
-    @apply sm:size-80 md:h-96 md:w-[25rem] rounded-lg;
   }
 
   .sword-man-clip-path {
@@ -140,6 +67,109 @@ body {
   }
 }
 
+/* =========================================================
+   COMPONENT CLASSES (CORE UTILITIES ONLY)
+   ========================================================= */
+.nav-hover-btn {
+  @apply relative ms-10 font-general text-xs uppercase text-blue-50 cursor-pointer;
+}
+
+.nav-hover-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background-color: rgb(38 38 38);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.nav-hover-btn:hover::after {
+  transform-origin: bottom left;
+  transform: scaleX(1);
+}
+
+.floating-nav {
+  @apply bg-black rounded-lg border border-white/20;
+}
+
+.absolute-center {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.hero-heading {
+  @apply uppercase font-zentry font-black text-5xl sm:text-7xl md:text-9xl lg:text-[12rem];
+}
+
+.about-subtext {
+  @apply absolute bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular-web text-lg md:max-w-[34rem];
+}
+
+.about-image {
+  @apply absolute left-1/2 top-0 z-20 h-[60vh] w-96 origin-center -translate-x-1/2 overflow-hidden rounded-3xl md:w-[30vw];
+}
+
+.animated-title {
+  @apply flex flex-col gap-1 text-7xl uppercase leading-[.8] text-white sm:px-32 md:text-[6rem];
+}
+
+.animated-word {
+  @apply font-zentry font-black opacity-0;
+  font-feature-settings: "ss01" on;
+  transform: translate3d(10px, 51px, -60px) rotateY(60deg) rotateX(-40deg);
+  transform-origin: 50% 50% -150px;
+  will-change: opacity, transform;
+}
+
+.bento-tilt_1 {
+  @apply relative col-span-2 overflow-hidden rounded-md border border-white/20 transition-transform duration-300 ease-out;
+}
+
+.bento-tilt_2 {
+  @apply relative col-span-1 row-span-1 overflow-hidden rounded-md transition-transform duration-300 ease-out;
+}
+
+.bento-title {
+  @apply uppercase text-4xl md:text-6xl font-black font-zentry;
+}
+
+.story-img-container {
+  @apply relative h-[90vh] md:h-dvh w-full;
+  filter: url("#flt_tag");
+}
+
+.story-img-mask {
+  @apply absolute left-0 top-0 size-full overflow-hidden md:left-[20%] md:top-[-10%] md:size-4/5;
+  clip-path: polygon(4% 0, 83% 21%, 100% 73%, 0% 100%);
+}
+
+.story-img-content {
+  @apply absolute w-full h-[50dvh] md:h-dvh opacity-100 left-10 top-16 md:left-0 md:top-10 lg:left-[-300px] lg:top-[-100px];
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.gallery-img-container {
+  @apply size-64 overflow-hidden bg-violet-300;
+}
+
+.gallery-img {
+  @apply size-full bg-cover;
+}
+
+.gallery-img-4 {
+  @apply rounded-lg sm:size-80 md:h-96 md:w-[25rem];
+}
+
+/* =========================================================
+   INDICATOR
+   ========================================================= */
 .indicator-line {
   @apply h-1 w-px rounded-full bg-white transition-all duration-200 ease-in-out;
 }
@@ -152,7 +182,7 @@ body {
 @keyframes indicator-line {
   0% {
     height: 4px;
-    transform: translateY(-0px);
+    transform: translateY(0);
   }
   50% {
     height: 16px;
@@ -160,12 +190,13 @@ body {
   }
   100% {
     height: 4px;
-    transform: translateY(-0px);
+    transform: translateY(0);
   }
 }
 
-/* From Uiverse.io by G4b413l */
-/* https://uiverse.io/G4b413l/tidy-walrus-92 */
+/* =========================================================
+   LOADER (PURE CSS)
+   ========================================================= */
 .three-body {
   --uib-size: 35px;
   --uib-speed: 0.8s;
@@ -183,7 +214,7 @@ body {
   width: 30%;
 }
 
-.three-body__dot:after {
+.three-body__dot::after {
   content: "";
   position: absolute;
   height: 0%;
@@ -217,8 +248,7 @@ body {
 .three-body__dot:nth-child(2)::after {
   bottom: 0;
   left: 0;
-  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15)
-    ease-in-out;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
 }
 
 .three-body__dot:nth-child(3) {
@@ -234,22 +264,12 @@ body {
 }
 
 @keyframes spin78236 {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
 
 @keyframes wobble1 {
-  0%,
-  100% {
-    transform: translateY(0%) scale(1);
-    opacity: 1;
-  }
-
   50% {
     transform: translateY(-66%) scale(0.65);
     opacity: 0.8;
@@ -257,38 +277,38 @@ body {
 }
 
 @keyframes wobble2 {
-  0%,
-  100% {
-    transform: translateY(0%) scale(1);
-    opacity: 1;
-  }
-
   50% {
     transform: translateY(66%) scale(0.65);
     opacity: 0.8;
   }
 }
 
+/* =========================================================
+   THEME TOKENS (TAILWIND v4)
+   ========================================================= */
 @theme {
   --font-zentry: "Zentry", sans-serif;
   --font-general: "General", sans-serif;
   --font-circular-web: "CircularWeb", sans-serif;
   --font-robert-regular: "RobertRegular", sans-serif;
   --font-robert-medium: "RobertMedium", sans-serif;
-}
 
-@theme {
-  /* BLUE */
+  /* 50 */
   --color-lavender-mist: #dfdff0;
+  /* 75 */
   --color-ghost-white: #dfdff2;
+  /* 100 */
   --color-alice-blue: #f0f2fa;
+  /* 200 */
   --color-off-black: #010101;
+  /* 300 */
   --color-picton-blue: #4fb7dd;
 
-  /* VIOLET */
+  /* 300 */
   --color-blue-violet: #5724ff;
 
-  /* YELLOW */
+  /* 100 */
   --color-olive-drab: #8e983f;
+  /* 300 */
   --color-laser-lemon: #edff66;
 }
