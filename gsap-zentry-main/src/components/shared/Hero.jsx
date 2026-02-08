@@ -1,82 +1,133 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Button from "../ui/Button";
 import { TiLocationArrow } from "react-icons/ti";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
+
+const TOTAL_VIDEOS = 4;
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [hasClicked, setHasClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedVideos, setLoadedVideos] = useState(0);
 
-  useGSAP(
-    () => {
-      if (hasClicked) {
-        gsap.set("#next-video", { visibility: "visible" });
-        gsap.to("#next-video", {
-          transformOrigin: "center center",
-          scale: 1,
-          width: "100%",
-          height: "100%",
-          ease: "power1.inOut",
-          onStart: () => nextVdRef.current.play(),
-        });
+  const [loadedSrcSet, setLoadedSrcSet] = useState(() => new Set());
 
-        gsap.from("#current-video", {
-          transformOrigin: "center center",
-          scale: 0,
-          duration: 1.5,
-          ease: "power1.inOut",
-        });
-      }
-    },
-    { dependencies: [currentIndex], revertOnUpdate: true },
+  // UNIQUE REFS
+  const rootRef = useRef(null);
+  const frameRef = useRef(null);
+  const nextVideoRef = useRef(null);
+  const previewVideoRef = useRef(null);
+
+  const upcomingVideoIndex = useMemo(
+    () => (currentIndex % TOTAL_VIDEOS) + 1,
+    [currentIndex],
   );
 
-  useGSAP(() => {
-    gsap.set("#video-frame", {
-      clipPath: "polygon(14% 0%, 72% 0%, 90% 90%, 0% 100%)",
-      borderRadius: "0 0 40% 10%",
+  const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
+
+  const previewSrc = useMemo(
+    () => getVideoSrc(upcomingVideoIndex),
+    [upcomingVideoIndex],
+  );
+
+  const nextSrc = useMemo(() => getVideoSrc(currentIndex), [currentIndex]);
+
+  const backgroundSrc = useMemo(
+    () => getVideoSrc(currentIndex),
+    [currentIndex],
+  );
+
+  const markVideoLoaded = (src) => {
+    setLoadedSrcSet((prev) => {
+      if (prev.has(src)) return prev;
+      const next = new Set(prev);
+      next.add(src);
+      return next;
     });
-
-    gsap.from("#video-frame", {
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      borderRadius: "0 0 0 0",
-      ease: "power1.inOut",
-      scrollTrigger: {
-        trigger: "#video-frame",
-        start: "center center",
-        end: "bottom center",
-        scrub: true,
-      },
-    });
-  });
-
-  const totalVideos = 4;
-  const nextVdRef = useRef(null);
-
-  const upcomingVdIndex = (currentIndex % totalVideos) + 1;
-
-  const handleMiniVdClick = () => {
-    setHasClicked(true);
-    setCurrentIndex(upcomingVdIndex);
   };
 
   useEffect(() => {
-    if (loadedVideos === totalVideos - 1) setIsLoading(false);
-  }, [loadedVideos]);
+    const required = new Set([backgroundSrc, previewSrc, nextSrc]);
+    const allReady = [...required].every((src) => loadedSrcSet.has(src));
+    if (allReady) setIsLoading(false);
+  }, [loadedSrcSet, backgroundSrc, previewSrc, nextSrc]);
 
-  const handleVdLoad = () => {
-    setLoadedVideos((prevState) => prevState + 1);
+  const handleMiniVideoClick = () => {
+    setHasClicked(true);
+    setCurrentIndex(upcomingVideoIndex);
   };
 
-  const getVdSrc = (index) => `videos/hero-${index}.mp4`;
+  // CLICK TRANSITION ANIMATION
+  useGSAP(
+    () => {
+      if (!hasClicked) return;
+      if (!nextVideoRef.current || !previewVideoRef.current) return;
+
+      gsap.set(nextVideoRef.current, { visibility: "visible", scale: 0.6 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power1.inOut" },
+      });
+
+      tl.to(nextVideoRef.current, {
+        transformOrigin: "center center",
+        scale: 1,
+        width: "100%",
+        height: "100%",
+        duration: 0.9,
+        onStart: () => {
+          nextVideoRef.current?.play().catch(() => {
+            // ignored: browser autoplay policies can block in rare cases
+          });
+        },
+      }).from(
+        previewVideoRef.current,
+        {
+          transformOrigin: "center center",
+          scale: 0,
+          duration: 0.9,
+        },
+        0,
+      );
+    },
+    {
+      scope: rootRef,
+      dependencies: [currentIndex, hasClicked],
+      revertOnUpdate: true,
+    },
+  );
+
+  // SCROLL ANIMATION
+  useGSAP(
+    () => {
+      if (!frameRef.current) return;
+
+      gsap.set(frameRef.current, {
+        clipPath: "polygon(14% 0%, 72% 0%, 90% 90%, 0% 100%)",
+        borderRadius: "0 0 40% 10%",
+      });
+
+      gsap.from(frameRef.current, {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        borderRadius: "0 0 0 0",
+        ease: "power1.inOut",
+        scrollTrigger: {
+          trigger: frameRef.current,
+          start: "center center",
+          end: "bottom center",
+          scrub: true,
+        },
+      });
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <div className="relative h-dvh w-screen overflow-x-hidden">
+    <div ref={rootRef} className="relative h-dvh w-screen overflow-x-hidden">
       {isLoading && (
         <div className="flex-center absolute z-100 h-dvh w-screen overflow-hidden bg-violet-50">
           <div className="three-body">
@@ -86,50 +137,57 @@ const Hero = () => {
           </div>
         </div>
       )}
+
       <div
-        id="video-frame"
+        ref={frameRef}
         className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-lavender-mist"
       >
         <div>
+          {/* MINI PREVIEW */}
           <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
             <div
-              onClick={handleMiniVdClick}
+              onClick={handleMiniVideoClick}
               className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"
             >
               <video
-                ref={nextVdRef}
-                src={getVdSrc(upcomingVdIndex)}
+                ref={previewVideoRef}
+                src={previewSrc}
                 loop
                 muted
-                id="current-video"
+                playsInline
                 className="size-64 origin-center scale-150 object-cover object-center"
-                onLoadedData={handleVdLoad}
+                onLoadedData={() => markVideoLoaded(previewSrc)}
               />
             </div>
           </div>
 
+          {/* ANIMATED LAYER */}
           <video
-            ref={nextVdRef}
-            src={getVdSrc(currentIndex)}
+            ref={nextVideoRef}
+            src={nextSrc}
             loop
             muted
-            id="next-video"
-            onLoadedData={handleVdLoad} 
+            playsInline
+            onLoadedData={() => markVideoLoaded(nextSrc)}
             className="absolute-center invisible absolute z-20 size-64 object-cover object-center"
           />
 
+          {/* BG VIDEO */}
           <video
-            src={getVdSrc(currentIndex === totalVideos - 1 ? 1 : currentIndex)}
+            src={backgroundSrc}
             autoPlay
             loop
             muted
+            playsInline
             className="absolute left-0 top-0 size-full object-cover object-center"
-            onLoadedData={handleVdLoad}
+            onLoadedData={() => markVideoLoaded(backgroundSrc)}
           />
         </div>
+
         <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-ghost-white">
           G<b>a</b>ming
         </h1>
+
         <div className="absolute left-0 top-0 z-40 size-full">
           <div className="mt-24 px-5 sm:px-10">
             <h1 className="special-font hero-heading z-40 text-ghost-white">
@@ -149,6 +207,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
       <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
         G<b>a</b>ming
       </h1>

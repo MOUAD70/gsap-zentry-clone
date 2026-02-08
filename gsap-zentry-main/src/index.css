@@ -42,6 +42,36 @@ body {
 }
 
 /* =========================================================
+   THEME TOKENS (TAILWIND v4)
+   ========================================================= */
+@theme {
+  --font-zentry: "Zentry", sans-serif;
+  --font-general: "General", sans-serif;
+  --font-circular-web: "CircularWeb", sans-serif;
+  --font-robert-regular: "RobertRegular", sans-serif;
+  --font-robert-medium: "RobertMedium", sans-serif;
+
+  /* 50 */
+  --color-lavender-mist: #dfdff0;
+  /* 75 */
+  --color-ghost-white: #dfdff2;
+  /* 100 */
+  --color-alice-blue: #f0f2fa;
+  /* 200 */
+  --color-off-black: #010101;
+  /* 300 */
+  --color-picton-blue: #4fb7dd;
+
+  /* 300 */
+  --color-blue-violet: #5724ff;
+
+  /* 100 */
+  --color-olive-drab: #8e983f;
+  /* 300 */
+  --color-laser-lemon: #edff66;
+}
+
+/* =========================================================
    UTILITIES (HTML-ONLY, NO @apply REUSE)
    ========================================================= */
 @layer utilities {
@@ -71,7 +101,7 @@ body {
    COMPONENT CLASSES (CORE UTILITIES ONLY)
    ========================================================= */
 .nav-hover-btn {
-  @apply relative ms-10 font-general text-xs uppercase text-blue-50 cursor-pointer;
+  @apply relative ms-10 font-general text-xs uppercase text-lavender-mist cursor-pointer;
 }
 
 .nav-hover-btn::after {
@@ -81,7 +111,7 @@ body {
   bottom: -2px;
   height: 2px;
   width: 100%;
-  background-color: rgb(38 38 38);
+  background-color: currentColor;
   transform: scaleX(0);
   transform-origin: bottom right;
   transition: transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -109,7 +139,7 @@ body {
 }
 
 .about-subtext {
-  @apply absolute bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular-web text-lg md:max-w-[34rem];
+  @apply absolute left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular-web text-lg md:max-w-136 bottom-[-90dvh] sm:bottom-[-86dvh] md:bottom-[-80dvh];
 }
 
 .about-image {
@@ -248,7 +278,8 @@ body {
 .three-body__dot:nth-child(2)::after {
   bottom: 0;
   left: 0;
-  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15)
+    ease-in-out;
 }
 
 .three-body__dot:nth-child(3) {
@@ -281,34 +312,4 @@ body {
     transform: translateY(66%) scale(0.65);
     opacity: 0.8;
   }
-}
-
-/* =========================================================
-   THEME TOKENS (TAILWIND v4)
-   ========================================================= */
-@theme {
-  --font-zentry: "Zentry", sans-serif;
-  --font-general: "General", sans-serif;
-  --font-circular-web: "CircularWeb", sans-serif;
-  --font-robert-regular: "RobertRegular", sans-serif;
-  --font-robert-medium: "RobertMedium", sans-serif;
-
-  /* 50 */
-  --color-lavender-mist: #dfdff0;
-  /* 75 */
-  --color-ghost-white: #dfdff2;
-  /* 100 */
-  --color-alice-blue: #f0f2fa;
-  /* 200 */
-  --color-off-black: #010101;
-  /* 300 */
-  --color-picton-blue: #4fb7dd;
-
-  /* 300 */
-  --color-blue-violet: #5724ff;
-
-  /* 100 */
-  --color-olive-drab: #8e983f;
-  /* 300 */
-  --color-laser-lemon: #edff66;
 }
