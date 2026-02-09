@@ -75,6 +75,10 @@ body {
    UTILITIES (HTML-ONLY, NO @apply REUSE)
    ========================================================= */
 @layer utilities {
+  .border-hsla {
+    @apply border border-white/20;
+  }
+
   .special-font {
     font-family: "Zentry", sans-serif;
     font-feature-settings: "ss01" on;

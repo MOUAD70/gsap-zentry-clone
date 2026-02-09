@@ -1,4 +1,5 @@
 import About from "./components/shared/About";
+import Features from "./components/shared/Features";
 import Hero from "./components/shared/Hero";
 import Navbar from "./components/shared/Navbar";
 
@@ -8,6 +9,7 @@ const App = () => {
       <Navbar />
       <Hero />
       <About />
+      <Features />
     </main>
   );
 };
