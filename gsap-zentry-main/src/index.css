@@ -4,9 +4,23 @@
 /* =========================================================
    GLOBAL BASE
    ========================================================= */
-body {
-  width: 100dvw;
+
+html,
+body,
+#root {
+  max-width: 100%;
   overflow-x: hidden;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
   background-color: #dfdff0;
   font-family: "General Sans", sans-serif;
 }
@@ -163,7 +177,7 @@ body {
 }
 
 .bento-tilt_1 {
-  @apply relative col-span-2 overflow-hidden rounded-md border border-white/20 transition-transform duration-300 ease-out;
+  @apply relative overflow-hidden rounded-md border border-white/20 transition-transform duration-300 ease-out col-span-2 md:col-auto;
 }
 
 .bento-tilt_2 {
