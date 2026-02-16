@@ -154,6 +154,7 @@ const Hero = () => {
                 src={previewSrc}
                 loop
                 muted
+                autoPlay
                 playsInline
                 className="size-64 origin-center scale-150 object-cover object-center"
                 onLoadedData={() => markVideoLoaded(previewSrc)}
