@@ -8,8 +8,6 @@ import { TiLocationArrow } from "react-icons/ti";
 const Story = () => {
   const frameRef = useRef(null);
 
-  const handleMouseUp = () => {};
-  const handleMouseEnter = () => {};
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
     const element = frameRef.current;
@@ -67,8 +65,8 @@ const Story = () => {
                 <img
                   ref={frameRef}
                   onMouseLeave={handleMouseLeave}
-                  onMouseUp={handleMouseUp}
-                  onMouseEnter={handleMouseEnter}
+                  onMouseUp={handleMouseLeave}
+                  onMouseEnter={handleMouseLeave}
                   onMouseMove={handleMouseMove}
                   src="/img/entrance.webp"
                   alt="entrance"
