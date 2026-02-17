@@ -126,6 +126,29 @@ const Hero = () => {
     { scope: rootRef },
   );
 
+  const [transformStyle, setTransformStyle] = useState("");
+  const itemRef = useRef();
+
+  const handleMouseMove = (e) => {
+    if (!itemRef.current) return;
+    const { left, top, width, height } =
+      itemRef.current.getBoundingClientRect();
+
+    const relativeX = (e.clientX - left) / width;
+    const relativeY = (e.clientY - top) / height;
+
+    const tiltX = (relativeY - 0.5) * 20;
+    const tiltY = (relativeX - 0.5) * -20;
+
+    const newTransform = `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(0.95, 0.95, 0.95)`;
+
+    setTransformStyle(newTransform);
+  };
+
+  const handleMouseLeave = (e) => {
+    setTransformStyle("");
+  };
+
   return (
     <div ref={rootRef} className="relative h-dvh w-screen overflow-x-hidden">
       {isLoading && (
@@ -144,7 +167,13 @@ const Hero = () => {
       >
         <div>
           {/* MINI PREVIEW */}
-          <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
+          <div
+            ref={itemRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ transform: transformStyle }}
+            className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg"
+          >
             <div
               onClick={handleMiniVideoClick}
               className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"

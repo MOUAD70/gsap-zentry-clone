@@ -43,11 +43,9 @@ const Story = () => {
       ease: "power1.inOut",
     });
   };
+
   return (
-    <section
-      id="story"
-      className="min-h-dvh w-full bg-black text-lavender-mist overflow-hidden"
-    >
+    <section className="min-h-dvh w-full bg-black text-lavender-mist overflow-hidden">
       <div className="flex size-full flex-col items-center py-10 pb-24">
         <p className="font-general text-sm uppercase md:text-[10px]">
           the multiversal ip world
