@@ -30,7 +30,7 @@ const About = () => {
         borderRadius: 0,
       });
     },
-    { scope: rootRef }, // scoped + automatic cleanup
+    { scope: rootRef },
   );
 
   return (
